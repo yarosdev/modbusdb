@@ -1,0 +1,48 @@
+{
+  "name": "modbusdb",
+  "version": "1.0.0",
+  "description": "An abstraction layer over the modbus protocol",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rimraf ./dist && tsc",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yarosdev/modbusdb.git"
+  },
+  "keywords": [
+    "nodejs",
+    "modbus",
+    "db"
+  ],
+  "author": "yaroslavhoisa@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yarosdev/modbusdb/issues"
+  },
+  "homepage": "https://github.com/yarosdev/modbusdb#readme",
+  "dependencies": {
+    "p-queue": "^7.3.0",
+    "p-retry": "^5.1.1",
+    "p-timeout": "^6.0.0"
+  },
+  "peerDependencies": {
+    "modbus-serial": "^8"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/node": "^18.8.3",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "eslint": "8.22.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}
