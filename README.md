@@ -1,6 +1,9 @@
 # modbusdb
 An abstraction layer over the modbus protocol
 
+### Install
+`npm install modbusdb`
+
 ## The main thing
 ```javascript
 
@@ -159,7 +162,6 @@ bootstrap();
 1. Create documentation
 2. Add unit tests
 3. Make more examples
-4. Publish to npm:)
 
 ## Links
 1. https://github.com/yaacov/node-modbus-serial
