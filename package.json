@@ -1,6 +1,6 @@
 {
   "name": "modbusdb",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An abstraction layer over the modbus protocol",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -50,7 +50,6 @@
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
-    "tsup": "^8.0.1",
     "typescript": "^4.8.4"
   }
 }
