@@ -1,6 +1,8 @@
 # modbusdb
 An abstraction layer over the modbus protocol
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C1C2RHVTE)
+
 ### Install
 `npm install modbusdb`
 
