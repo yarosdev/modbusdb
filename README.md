@@ -76,7 +76,7 @@ const bootstrap = async () => {
       forceWriteMany: true, // Use 15(0x0f) and 16(0x10) functions for single register, default: false
       bigEndian: true, // You can use BigEndian for byte order, default: false
       swapWords: false, // This is applicable only for multi-registers types such as int32, float etc, default: false
-      requestWithGaps: true, // You can use BigEndian for byte order, default: true
+      requestWithGaps: true, // If requesting address 10 and 13 allow to send one request to the device, default: true
       maxRequestSize: 32, // How many registers to be requested in one round-trip with device, default: 1
     }
   ];
