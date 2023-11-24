@@ -2,10 +2,17 @@
   "name": "modbusdb",
   "version": "1.0.0",
   "description": "An abstraction layer over the modbus protocol",
-  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
   "type": "module",
+  "exports": "./dist/index.js",
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "rimraf ./dist && tsc",
+    "build": "rimraf ./dist && tsc --declaration",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
@@ -43,6 +50,7 @@
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
+    "tsup": "^8.0.1",
     "typescript": "^4.8.4"
   }
 }

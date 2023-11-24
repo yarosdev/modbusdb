@@ -40,29 +40,10 @@ const result = await db.mset(
 
 ### Example
 
-```javascript
-import { Modbusdb, ModbusSerialDriver, Datamap, createRegisterKey } from "modbusdb";
+```typescript
+import { Modbusdb, ModbusSerialDriver, Datamap, createRegisterKey, TypeEnum, ScopeEnum } from "modbusdb";
 
 import ModbusRTU from 'modbus-serial';
-
-const TypeEnum = {
-    Bit: 1,
-    // reserved, not implemented yet:
-    // Int8: 2,
-    // UInt8: 3,
-    Int16: 4,
-    UInt16: 5,
-    Int32: 6,
-    UInt32: 7,
-    Float: 8
-}
-
-const ScopeEnum = {
-    PhysicalState: 1, // Discrete Inputs
-    InternalState: 2, // Coils
-    PhysicalRegister: 3, // Input Registers
-    InternalRegister: 4 // Holding Registers
-}
 
 const bootstrap = async () => {
   const client = new ModbusRTU();
@@ -83,8 +64,14 @@ const bootstrap = async () => {
       maxRequestSize: 32, // How many registers to be requested in one round-trip with device, default: 1
     }
   ];
-
-  const records = [
+  
+  // 1 -> ScopeEnum.PhysicalState -> Discrete Inputs
+  // 2 -> ScopeEnum.InternalState -> Coils
+  // 3 -> ScopeEnum.PhysicalRegister -> Input Registers
+  // 4 -> ScopeEnum.InternalRegister -> Holding Registers
+  
+  // Define a schema for a database:
+  const schema = [
     // Every data item has a unique int32 key (like ID), this key depends on unit,table,address...
     {
       key: createRegisterKey(1, ScopeEnum.InternalRegister, 10), // Encode [unit,table,address,bit index] into a single 32bit integer key
@@ -108,7 +95,7 @@ const bootstrap = async () => {
 
   const db = new Modbusdb({
     driver: new ModbusSerialDriver(client),
-    datamap: new Datamap(records, units),
+    datamap: new Datamap(schema, units),
     interval: 60, // 60 seconds
     timeout: 15, // 15 seconds
     roundSize: 12 // interval 60 divided by 12 is 5sec, so every 5 seconds modbusdb will poll for data
