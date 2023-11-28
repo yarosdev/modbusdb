@@ -1,6 +1,9 @@
 # modbusdb
 An abstraction layer over the modbus protocol
 
+![npm](https://img.shields.io/npm/dm/modbusdb)
+![npm](https://img.shields.io/npm/v/modbusdb)
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C1C2RHVTE)
 
 ### Install
