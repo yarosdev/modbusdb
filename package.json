@@ -1,6 +1,6 @@
 {
   "name": "modbusdb",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An abstraction layer over the modbus protocol",
   "types": "./dist/index.d.ts",
   "type": "module",
