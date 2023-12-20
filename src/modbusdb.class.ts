@@ -43,10 +43,10 @@ export declare interface Modbusdb {
 }
 
 interface UnitStateInterface {
-  timedOutTime?: Date;
+  timedOutTime: number;
+  timeoutsCount: number;
   requestsCount: number;
   errorsCount: number;
-  timedOutFor: number;
 }
 
 interface DatabaseStateInterface {
@@ -211,18 +211,19 @@ export class Modbusdb extends EventEmitter {
     this._state.requestsCount += 1;
     this._state.errorsCount += hasError ? 1 : 0;
 
-    unit.requestsCount += 1;
-    unit.errorsCount += hasError ? 1 : 0;
-    unit.timedOutTime = isTimedOut ? new Date() : undefined;
-
-    this._state.units.set(t.unit, unit);
+    this._state.units.set(t.unit, {
+      timedOutTime: isTimedOut ? Date.now() : 0,
+      timeoutsCount: isTimedOut ? unit.timeoutsCount + 1 : 0,
+      requestsCount: unit.requestsCount + 1,
+      errorsCount: unit.errorsCount + (hasError ? 1 : 0)
+    });
 
     if (!isTimedOut) {
       this.responseTime.push(t.duration);
+    }
 
-      if (this.responseTime.length > 99) {
-        this.responseTime.shift();
-      }
+    if (this.responseTime.length > 99) {
+      this.responseTime.shift();
     }
 
     this.emit('response', t);
@@ -296,18 +297,12 @@ export class Modbusdb extends EventEmitter {
     const unitConfig = this.datamap.unit(id);
     const unitState = this._state.units.get(id);
 
-    let timedOutFor = Infinity;
-
-    if (unitState?.timedOutTime !== undefined) {
-      timedOutFor = Math.floor((Date.now() - unitState.timedOutTime.getTime()) / 1000);
-    }
-
     return {
       ...unitConfig,
       requestsCount: unitState?.requestsCount ?? 0,
       errorsCount: unitState?.errorsCount ?? 0,
-      timedOutTime: unitState?.timedOutTime,
-      timedOutFor
+      timedOutTime: unitState?.timedOutTime ?? 0,
+      timeoutsCount: unitState?.timeoutsCount ?? 0
     };
   }
 
@@ -326,11 +321,14 @@ export class Modbusdb extends EventEmitter {
         return Promise.resolve(t.finish(new Error('Aborted')));
       }
 
-      const unitTimedOutFor = this.unit(t.unit).timedOutFor;
-      const unitSuspendFor = Math.round(this.interval / 3) + (options?.timeout ?? this.timeout);
+      const unit = this.unit(t.unit);
 
-      if (t.priority === PriorityEnum.LOW && unitTimedOutFor < unitSuspendFor) {
-        return Promise.resolve(t.finish(new Error('Canceled')));
+      if (
+        t.priority === PriorityEnum.LOW &&
+        unit.timeoutsCount > 2 &&
+        Date.now() - unit.timedOutTime < 3 * (options?.timeout ?? this.timeout) * 1000
+      ) {
+        return Promise.resolve(t.finish(new Error('Too many timeouts for this unit')));
       }
 
       this.pendingTransactions.add(t);
